@@ -38,7 +38,7 @@ To achieve this, UniVAD utilizes a **Tri-Branch AutoEncoder Architecture**, wher
 ## 🛠️ Architecture
 
 <div align="center">
-  <p><em>(Conceptual Overview of UniVAD Architecture)</em></p>
+  <img src="assets/architecture.jpg" width="800" alt="UniVAD Architecture"/>
 </div>
 
 The model processes multi-modal inputs (Skeleton coordinates, RGB Patches, Global Frames) through parallel AutoEncoders. The final anomaly score is computed by aggregating reconstruction errors and prediction errors from all branches.
