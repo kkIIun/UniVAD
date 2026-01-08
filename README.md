@@ -129,13 +129,18 @@ This will compute the final anomaly scores using weighted combination:
 
 ## 📈 Performance
 
-UniVAD achieves significant improvements over existing methods:
+UniVAD achieves state-of-the-art performance on multiple anomaly detection benchmarks:
 
-| Dataset | AUC Improvement |
-|---------|----------------|
-| ShanghaiTech | +2.0% |
-| UBnormal | +9.9% |
-| NWPUCampus | +3.3% |
+| Dataset      | Metric | Ours  | Ours† |
+|--------------|--------|-------|-------|
+| ShanghaiTech | Micro  | 89.3  | 89.5  |
+|              | Macro  | 91.5  | 91.6  |
+| UBnormal     | Micro  | 79.3  | 82.7  |
+|              | Macro  | 90.1  | 91.4  |
+| NWPUCampus   | Micro  | 72.2  | 73.4  |
+|              | Macro  | 87.6  | 87.5  |
+
+*Ours† denotes results with additional data augmentation.
 
 ---
 
