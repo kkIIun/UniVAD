@@ -133,9 +133,9 @@ UniVAD achieves significant improvements over existing methods:
 
 | Dataset | AUC Improvement |
 |---------|----------------|
-| ShanghaiTech | +2% to +11% |
-| NWPUCampus | +2% to +11% |
-| UBnormal | +2% to +11% |
+| ShanghaiTech | +2.0% |
+| UBnormal | +9.9% |
+| NWPUCampus | +3.3% |
 
 ---
 
