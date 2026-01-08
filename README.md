@@ -4,55 +4,164 @@
 [![Framework: PyTorch](https://img.shields.io/badge/Framework-PyTorch-orange.svg)](https://pytorch.org/)
 [![Conference: WACV 2026](https://img.shields.io/badge/WACV-2026-blue.svg)](http://wacv2026.thecvf.com/)
 
-**UniVAD** is a unified framework designed to detect various types of video anomalies effectively. Unlike existing models that often focus on specific anomaly types or struggle with complex real-world scenarios, UniVAD introduces a comprehensive approach to handle diverse anomalous events.
-
-This repository contains the official implementation of the paper **"UniVAD: Unified Video Anomaly Detection Model for Detecting Different Anomaly Types"**, accepted at **WACV 2026**.
+**UniVAD** is a unified framework for video anomaly detection that categorizes anomalies into three types and employs a tri-branch autoencoder architecture to detect them simultaneously. This repository contains the official implementation of the paper **"UniVAD: Unified Video Anomaly Detection"**, accepted at **WACV 2026**.
 
 ---
 
-## 📖 Introduction
+## 📖 Overview
 
-In real-world surveillance environments, anomalies appear in various forms. To address this, UniVAD categorizes anomalies into three distinct types and proposes a unified framework to detect them simultaneously:
+UniVAD addresses the challenge of detecting diverse types of anomalies in video surveillance by:
 
-1.  **Human-related Anomaly:** Abnormal human behaviors (e.g., fighting, falling).
-2.  **Object-related Anomaly:** Abnormalities involving objects (e.g., throwing a bag, riding a bicycle where prohibited).
-3.  **Object-independent Anomaly:** Contextual or environmental deviations unrelated to specific objects.
+1. **Categorizing anomalies** into three distinct types:
+   - **Human-related Anomaly:** Abnormal human behaviors (fighting, falling, etc.)
+   - **Object-related Anomaly:** Object-based anomalies (throwing objects, prohibited activities)
+   - **Object-independent Anomaly:** Contextual/environmental deviations
 
-To achieve this, UniVAD utilizes a **Tri-Branch AutoEncoder Architecture**, where each branch is specialized for learning specific features: **Skeleton**, **Local Visual**, and **Global Visual**.
+2. **Tri-Branch Architecture:**
+   - **Skeleton Branch:** Processes human pose data for motion pattern analysis
+   - **Local Visual Branch:** Analyzes object-level appearance features
+   - **Global Visual Branch:** Captures frame-level contextual information
+
+---
+
+## 🏗️ Repository Structure
+
+```
+UniVAD/
+├── skeleton/          # Skeleton-based detection (STGCN, STAE)
+├── local-visual/      # Local visual features (AutoEncoder)
+├── global-visual/     # Global visual features (AutoEncoder)
+├── final_score/       # Dataset results (nwpu, shanghai, ubnormal)
+├── calc_total_score.py # Score aggregation
+└── requirements.txt    # Dependencies
+```
 
 ---
 
 ## 🚀 Key Features
 
-* **Tri-Branch AutoEncoder Design:**
-    * **Skeleton AE:** Captures fine-grained motion patterns and human poses using extracted skeleton data.
-    * **Local Visual AE:** Learns appearance-based features of individual objects to detect object-related anomalies.
-    * **Global Visual AE:** Captures the global context and environmental changes within the entire frame.
-* **Predictive Learning Strategy:**
-    * Enhances detection accuracy by training the model to predict past and future frames based on current information, effectively identifying temporal inconsistencies.
-* **SOTA Performance:**
-    * Achieved **2% to 11% performance improvement** on major benchmark datasets (ShanghaiTech, UCF-Crime, etc.) compared to existing state-of-the-art methods.
+- **Multi-modal Processing:** Combines skeleton, local visual, and global visual features
+- **Predictive Learning:** Uses past and future frame prediction for anomaly detection
+- **Flexible Architecture:** Each branch can be trained independently
+- **Comprehensive Evaluation:** Supports multiple benchmark datasets (ShanghaiTech, NWPUCampus, UBnormal)
 
 ---
 
-## 🛠️ Architecture
+## 🛠️ Installation
 
-<div align="center">
-  <img src="assets/architecture.jpg" width="800" alt="UniVAD Architecture"/>
-</div>
+### Prerequisites
+- Python 3.8+
+- PyTorch 2.1.0+
+- CUDA (for GPU acceleration)
 
-The model processes multi-modal inputs (Skeleton coordinates, RGB Patches, Global Frames) through parallel AutoEncoders. The final anomaly score is computed by aggregating reconstruction errors and prediction errors from all branches.
-
----
-
-## 📦 Installation
-
-This project requires **Python 3.8+** and **PyTorch**.
+### Setup
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/kkIIun/UniVAD.git](https://github.com/kkIIun/UniVAD.git)
+git clone https://github.com/kkIIun/UniVAD.git
 cd UniVAD
 
 # 2. Install dependencies
 pip install -r requirements.txt
+
+# 3. Install PyTorch (if not already installed)
+pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0
+```
+
+---
+
+## 📊 Datasets
+
+UniVAD supports the following benchmark datasets:
+
+- **ShanghaiTech Campus Dataset**
+- **NWPUCampus Dataset** 
+- **UBnormal Dataset**
+
+Each dataset should be preprocessed to extract:
+- Skeleton features (pose keypoints)
+- Local visual features (object-level embeddings)
+- Global visual features (frame-level embeddings)
+
+---
+
+## 🏃‍♂️ Usage
+
+### Training Individual Branches
+
+#### 1. Skeleton Branch
+```bash
+cd skeleton
+bash train_skeleton.sh
+```
+
+#### 2. Local Visual Branch
+```bash
+cd local-visual
+bash train_local_visual.sh
+```
+
+#### 3. Global Visual Branch
+```bash
+cd global-visual
+bash train_global_visual.sh
+```
+
+### Training All Branches
+```bash
+bash train_all.sh
+```
+
+### Evaluation and Score Aggregation
+
+After training all three branches, aggregate the scores:
+
+```bash
+python calc_total_score.py
+```
+
+This will compute the final anomaly scores using weighted combination:
+- Skeleton score weight (α): 1.0
+- Local visual score weight (β): 0.1  
+- Global visual score weight (γ): 0.1
+
+---
+
+## 📈 Performance
+
+UniVAD achieves significant improvements over existing methods:
+
+| Dataset | AUC Improvement |
+|---------|----------------|
+| ShanghaiTech | +2% to +11% |
+| NWPUCampus | +2% to +11% |
+| UBnormal | +2% to +11% |
+
+---
+
+## 🤝 Citation
+
+If you use this code for your research, please cite:
+
+```bibtex
+@inproceedings{univad2026,
+  title={UniVAD: Unified Video Anomaly Detection},
+  author={[Author Names]},
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  year={2026}
+}
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with PyTorch and PyTorch Lightning
+- Uses OpenCV for video processing
+- Skeleton processing inspired by STGCN and STAE models
